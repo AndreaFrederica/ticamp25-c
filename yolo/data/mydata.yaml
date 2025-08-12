@@ -1,0 +1,5 @@
+train: C:\Users\21093\Desktop\YOLOv5-Lite-1.4\YOLOv5-Lite\data\train  # 训练图像文件夹路径
+val: C:\Users\21093\Desktop\YOLOv5-Lite-1.4\YOLOv5-Lite\data\valid     # 验证图像文件夹路径
+test: # 4952 images
+nc: 8                        # 类别数量
+names: [ '1', '2', '3', '4', '5', '6', '7', '8' ]  # 类别名称列表

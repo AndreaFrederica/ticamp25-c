@@ -1,0 +1,9 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+dig
+**/__pycache__
+yolo/data/*
+yolo/weights/*
+yolo/input/*
+yolo/output/*

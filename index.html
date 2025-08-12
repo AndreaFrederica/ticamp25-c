@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>CV Debug</title>
+</head>
+
+<body>
+    <h1>CV Debug</h1>
+    <div style="display:flex;">
+        <div>
+            <img src="/video/processed" width="480" />
+            <img src="/video/mask" width="480" />
+        </div>
+        <div style="margin-left:20px;">
+            <h3>HSV</h3>
+            <!-- HSV sliders -->
+            <label>H Min:<input id="h_min" type="range" min="0" max="179" value="0" /><span
+                    id="h_min_val">0</span></label>
+            <label>H Max:<input id="h_max" type="range" min="0" max="179" value="179" /><span
+                    id="h_max_val">179</span></label>
+            <label>S Min:<input id="s_min" type="range" min="0" max="255" value="0" /><span
+                    id="s_min_val">0</span></label>
+            <label>S Max:<input id="s_max" type="range" min="0" max="255" value="255" /><span
+                    id="s_max_val">255</span></label>
+            <label>V Min:<input id="v_min" type="range" min="0" max="255" value="85" /><span
+                    id="v_min_val">85</span></label>
+            <label>V Max:<input id="v_max" type="range" min="0" max="255" value="255" /><span
+                    id="v_max_val">255</span></label>
+            <h3>Canny</h3>
+            <label>canny_min:<input id="canny_min" type="range" min="0" max="255" value="50" /><span
+                    id="canny_min_val">50</span></label>
+            <label>canny_max:<input id="canny_max" type="range" min="0" max="255" value="150" /><span
+                    id="canny_max_val">150</span></label>
+            <h3>Distance Formula</h3>
+            <input id="formula" style="width:300px" value="((524.38/x)**(1/1.003))*100" />
+            <h3>Results</h3>
+            <div>Count: <span id="count">0</span></div>
+            <div id="rects"></div>
+        </div>
+    </div>
+    <script>
+        const ws = new WebSocket(`ws://${location.host}/ws`);
+        ws.onmessage = e => {
+            const s = JSON.parse(e.data);
+            document.getElementById('count').innerText = s.count;
+            const f = document.getElementById('formula').value;
+            document.getElementById('rects').innerHTML = s.rects.map(r => {
+                const x = r.new_long_px;
+                let d = '';
+                try { d = eval(f); } catch { }
+                return `<div>new: ${x.toFixed(1)}, dist: ${d.toFixed(1)}</div>`;
+            }).join('');
+        };
+        ['h_min', 'h_max', 's_min', 's_max', 'v_min', 'v_max', 'canny_min', 'canny_max'].forEach(k => {
+            const inp = document.getElementById(k), val = document.getElementById(k + '_val');
+            inp.oninput = () => {
+                val.innerText = inp.value;
+                const data = {
+                    h_min: +document.getElementById('h_min').value,
+                    h_max: +document.getElementById('h_max').value,
+                    s_min: +document.getElementById('s_min').value,
+                    s_max: +document.getElementById('s_max').value,
+                    v_min: +document.getElementById('v_min').value,
+                    v_max: +document.getElementById('v_max').value,
+                    canny_min: +document.getElementById('canny_min').value,
+                    canny_max: +document.getElementById('canny_max').value
+                };
+                const url = k.startsWith('canny') ? '/control/canny' : '/control/hsv';
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            };
+        });
+    </script>
+</body>
+
+</html>

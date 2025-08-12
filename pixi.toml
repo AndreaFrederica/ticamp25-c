@@ -1,0 +1,45 @@
+[workspace]
+channels = ["conda-forge"]
+name = "25t"
+platforms = ["linux-aarch64"]
+version = "0.1.0"
+
+[tasks]
+web = { cmd = [
+  "uvicorn", "web:app",
+  "--host", "0.0.0.0",
+  "--port", "8000",
+  "--timeout-graceful-shutdown", "1"
+] }
+web2 = { cmd = [
+  "uvicorn", "simple_detector_web:app",
+  "--host", "0.0.0.0",
+  "--port", "8000",
+  "--timeout-graceful-shutdown", "1"
+] }
+
+[dependencies]
+python = ">=3.11.13,<3.12"
+
+
+[pypi-dependencies]
+opencv-python = ">=4.12.0.88, <5"
+serial = ">=0.0.97, <0.0.98"
+smbus = ">=1.1.post2, <2"
+fastapi = ">=0.116.1, <0.117"
+uvicorn = ">=0.35.0, <0.36"
+websockets = ">=15.0.1, <16"
+scipy = ">=1.16.1, <2"
+
+setuptools = ">=80.9.0, <81"
+wheel = ">=0.45.1, <0.46"
+easyocr = ">=1.7.2, <2"
+pip = ">=25.2, <26"
+smbus2 = ">=0.5.0, <0.6"
+pybind11 = ">=3.0.0, <4"
+pybind11-global = ">=3.0.0, <4"
+onnxruntime = ">=1.22.1, <2"
+opencv-contrib-python = ">=4.12.0.88, <5"
+mediapipe = ">=0.10.14, <0.11"
+python-multipart = ">=0.0.20, <0.0.21"
+requests = ">=2.32.4, <3"

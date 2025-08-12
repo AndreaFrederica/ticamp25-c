@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>CV Debug Extended</title>
+    <style>
+        /* ====== 基础布局 ====== */
+        body {
+            margin: 0;
+            padding: 0 1rem;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        }
+
+        h1 {
+            margin-top: 1rem;
+        }
+
+        /* 三列横排 */
+        .main {
+            display: flex;
+            gap: 2rem;
+            /* 三栏间距 */
+            align-items: flex-start;
+            /* 顶端对齐 */
+        }
+
+        .column {
+            flex: 0 0 auto;
+            /* 三栏宽度自适应内容 */
+        }
+
+        /* ====== 左栏：视频 ====== */
+        .video img {
+            display: block;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+        }
+
+        /* ====== 中栏：滑条 ====== */
+        .sliders section {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px dashed #aaa;
+            padding-bottom: 0.5rem;
+        }
+
+        .sliders h3 {
+            margin: 0.5rem 0;
+        }
+
+        /* 标签、滑条、实时值并排 */
+        .sliders label {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            margin: 0.25rem 0;
+        }
+
+        .sliders span {
+            width: 2.5rem;
+            text-align: right;
+            margin-left: 0.5rem;
+        }
+
+
+        /* ====== 右栏：统计 + 结果 ====== */
+        /* .stats {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        #rects {
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 1rem;
+        } */
+
+        /* 为每个矩形项添加样式 */
+        #rects div {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        #rects strong {
+            color: #007bff;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>CV Debug Extended</h1>
+
+    <div class="main">
+        <!-- ==================== 左：图像 ==================== -->
+        <div class="column video">
+            <h3>Processed Stream</h3>
+            <img id="processed" src="/video/processed" width="480" alt="Processed" />
+
+            <h3>Mask Stream</h3>
+            <img id="mask" src="/video/mask" width="480" alt="Mask" />
+        </div>
+
+        <!-- ==================== 中：滑条 ==================== -->
+        <div class="column sliders">
+            <!-- HSV Range 1 -->
+            <section>
+                <h3>HSV Range 1</h3>
+                <label>H1 Min:<input id="h1_min" type="range" min="0" max="179" value="0" /><span
+                        id="h1_min_val">0</span></label>
+                <label>H1 Max:<input id="h1_max" type="range" min="0" max="179" value="179" /><span
+                        id="h1_max_val">179</span></label>
+                <label>S1 Min:<input id="s1_min" type="range" min="0" max="255" value="0" /><span
+                        id="s1_min_val">0</span></label>
+                <label>S1 Max:<input id="s1_max" type="range" min="0" max="255" value="255" /><span
+                        id="s1_max_val">255</span></label>
+                <label>V1 Min:<input id="v1_min" type="range" min="0" max="255" value="0" /><span
+                        id="v1_min_val">0</span></label>
+                <label>V1 Max:<input id="v1_max" type="range" min="0" max="255" value="85" /><span
+                        id="v1_max_val">85</span></label>
+            </section>
+
+            <!-- HSV Range 2 -->
+            <section>
+                <h3>HSV Range 2</h3>
+                <label><input id="use_range2" type="checkbox" /> Enable Range2</label>
+                <label>H2 Min:<input id="h2_min" type="range" min="0" max="179" value="0" /><span
+                        id="h2_min_val">0</span></label>
+                <label>H2 Max:<input id="h2_max" type="range" min="0" max="179" value="179" /><span
+                        id="h2_max_val">179</span></label>
+                <label>S2 Min:<input id="s2_min" type="range" min="0" max="255" value="0" /><span
+                        id="s2_min_val">0</span></label>
+                <label>S2 Max:<input id="s2_max" type="range" min="0" max="255" value="255" /><span
+                        id="s2_max_val">255</span></label>
+                <label>V2 Min:<input id="v2_min" type="range" min="0" max="255" value="0" /><span
+                        id="v2_min_val">0</span></label>
+                <label>V2 Max:<input id="v2_max" type="range" min="0" max="255" value="85" /><span
+                        id="v2_max_val">85</span></label>
+            </section>
+
+            <!-- Min Area -->
+            <section>
+                <h3>Min Area</h3>
+                <label><input id="min_area" type="number" min="0" value="40000" style="width:5rem;" />
+                    px<sup>2</sup></label>
+                <h3>Max Area</h3>
+                <label><input id="max_area" type="number" min="0" value="190000" style="width:5rem;" />
+                    px<sup>2</sup></label>
+            </section>
+
+            <!-- Canny -->
+            <section>
+                <h3>Canny</h3>
+                <label>Min:<input id="canny_min" type="range" min="0" max="255" value="50" /><span
+                        id="canny_min_val">50</span></label>
+                <label>Max:<input id="canny_max" type="range" min="0" max="255" value="150" /><span
+                        id="canny_max_val">150</span></label>
+            </section>
+
+            <!-- Distance Formula -->
+            <section>
+                <h3>Distance Formula</h3>
+                <input id="formula" type="text" style="width:100%;" value="((524.38/x)**(1/1.003))*100" />
+            </section>
+        </div><!-- /sliders -->
+
+        <!-- ==================== 右：结果 ==================== -->
+        <div class="column">
+            <div class="stats">
+                <h3>Statistics</h3>
+                <div>Rectangles: <span id="count">0</span></div>
+                <div>Total Pixels: <span id="total_pixels">0</span></div>
+                <div>Frame Ratio: <span id="frame_ratio">0%</span></div>
+                <div>Black Ratio: <span id="black_ratio">0%</span></div>
+                <div>FPS: <span id="fps">0</span></div>
+            </div>
+
+            <h3>Detected Rectangles</h3>
+            <div id="rects"></div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch initial parameters from the server
+        fetch('/get/params')
+            .then(response => response.json())
+            .then(data => {
+                // Initialize the slider values
+                Object.keys(data).forEach(key => {
+                    if (document.getElementById(key)) {
+                        document.getElementById(key).value = data[key];
+                        document.getElementById(key + '_val').innerText = data[key];
+                    }
+                });
+                postData();  // Post the parameters to the server
+            });
+
+        // WebSocket setup
+        const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+        const ws = new WebSocket(`${proto}://${location.host}/ws`);
+        ws.onmessage = e => {
+            const s = JSON.parse(e.data);
+            // update global stats
+            document.getElementById('count').innerText = s.count;
+            document.getElementById('total_pixels').innerText = s.total_pixels;
+            document.getElementById('frame_ratio').innerText = s.frame_ratio.toFixed(2) + '%';
+            document.getElementById('black_ratio').innerText = s.black_ratio.toFixed(2) + '%';
+            document.getElementById('fps').innerText = s.fps.toFixed(1);
+
+            // render each rectangle
+            document.getElementById('rects').innerHTML = s.rects.map(r => {
+                const formula = document.getElementById('formula').value;
+                let d = 0;
+                let x = r.new_long_px;
+                try { d = eval(formula); } catch { };
+                return `<div>
+                    <strong>#${r.id}</strong><br/>
+                    Outer: ${r.outer_width}×${r.outer_height}<br/>
+                    Area: ${r.area}px<br/>
+                    New Edge: ${r.new_long_px.toFixed(1)}px<br/>
+                    Dist: ${d.toFixed(1)} cm<br/>
+                    Shape: ${r.shape_type}<br/>
+                    Inner: ${r.inner_width}×${r.inner_height} (area ${r.inner_area}px)<br/>
+                    Info: ${r.inner_info}
+                </div>`;
+            }).join('');
+        };
+
+        // postData: send all control values
+        function postData() {
+            const hsv = {
+                h1_min: +document.getElementById('h1_min').value,
+                h1_max: +document.getElementById('h1_max').value,
+                s1_min: +document.getElementById('s1_min').value,
+                s1_max: +document.getElementById('s1_max').value,
+                v1_min: +document.getElementById('v1_min').value,
+                v1_max: +document.getElementById('v1_max').value,
+                h2_min: +document.getElementById('h2_min').value,
+                h2_max: +document.getElementById('h2_max').value,
+                s2_min: +document.getElementById('s2_min').value,
+                s2_max: +document.getElementById('s2_max').value,
+                v2_min: +document.getElementById('v2_min').value,
+                v2_max: +document.getElementById('v2_max').value,
+                use_range2: document.getElementById('use_range2').checked ? 1 : 0,
+                min_area: +document.getElementById('min_area').value
+            };
+            fetch('/control/hsv', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(hsv)
+            });
+            const can = { canny_min: +document.getElementById('canny_min').value, canny_max: +document.getElementById('canny_max').value };
+            fetch('/control/canny', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(can) });
+        }
+
+        // bind controls
+        ['h1_min', 'h1_max', 's1_min', 's1_max', 'v1_min', 'v1_max',
+            'h2_min', 'h2_max', 's2_min', 's2_max', 'v2_min', 'v2_max',
+            'min_area', 'canny_min', 'canny_max', 'max_area'].forEach(id => {
+                const el = document.getElementById(id);
+                const val = document.getElementById(id + '_val');
+                if (!el) return;
+                if (val) el.oninput = () => { val.innerText = el.value; postData(); };
+                else el.oninput = postData;
+            });
+        document.getElementById('use_range2').onchange = postData;
+
+        // initial POST to push defaults
+        postData();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+文件夹内包含文件说明：
+deal jpg.py 对图片集进行标注并生成JSON文件
+transform.py 把JSON文件转换为txt文件
+export.py YOLO作者预留的PT权重模型转ONNX
+v5lite-s.pt YOLOv5-lite自带初始权重
+best.pt 笔者训练出来的权重（pytorch版）
+best.onnx 笔者训练出来的权重（onnx版）
+requirements.txt pytorch所需依赖清单
+test video.py 目标检测程序
+
+把本压缩包解压到树莓派4B中即可直接运行数字识别检测程序
