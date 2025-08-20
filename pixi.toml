@@ -17,6 +17,12 @@ web2 = { cmd = [
   "--port", "8000",
   "--timeout-graceful-shutdown", "1"
 ] }
+fin = { cmd = [
+  "uvicorn", "fin:v_app",
+  "--host", "0.0.0.0",
+  "--port", "8000",
+  "--timeout-graceful-shutdown", "1"
+] }
 
 [dependencies]
 python = ">=3.11.13,<3.12"
